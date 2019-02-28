@@ -121,6 +121,7 @@ class ExampleApp(QtWidgets.QMainWindow, Ui_MainWindow):
         # Manage Fitting ARPES
         self.PB_Fit_ARPES.clicked.connect(self.fitARPES)
 
+    # manage the fitting in ARPES window
     def fitARPES(self):
         if not self.ARPES_Dict['scatterpoints']:
             print("No data to fit to")
@@ -214,9 +215,6 @@ class ExampleApp(QtWidgets.QMainWindow, Ui_MainWindow):
     # Manage the Interactive elements of the Profile Graph
     def onclickProfile(self,event):
         if self.EDITING_PROFILE and event.xdata and event.ydata:
-            print('%s click: button=%d, x=%d, y=%d, xdata=%f, ydata=%f' %
-            ('double' if event.dblclick else 'single', event.button,
-            event.x, event.y, event.xdata, event.ydata))
             if event.button == 2:
                 try:
                     if self.Profile_Dict['peakScatter']:
