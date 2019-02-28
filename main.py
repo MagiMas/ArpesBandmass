@@ -144,10 +144,14 @@ class ExampleApp(QtWidgets.QMainWindow, Ui_MainWindow):
             try:
                 yfit = fitting.fitcurve(xfit)
                 self.ARPES_Dict['fitplot'], = self.WDGT_ARPES.canvas.ax.plot(xfit, yfit, color='#c65411')
-                output = "params = " + ",\n\t".join(str(e) for e in fitting.POPT) + "\n"
+                output = ''
+                i = 0
+                for element in fitting.POPT:
+                    output += 'a%d = ' % i + str(element) + '\n'
+                    i += 1
                 if self.BANDFIT == "quad":
-                    output += "\t m* = %f m_e" % self.calculateEffectiveMassQuadratic(fitting.POPT[0])
-                self.LBL_ARPES_Output.setText(output)
+                    output += "m* = %f m_e" % self.calculateEffectiveMassQuadratic(fitting.POPT[0])
+                self.TE_ARPES_output.setText(output)
             except:
                 print("fitting.fitcurve problem")
             self.WDGT_ARPES.canvas.draw_idle()
@@ -246,17 +250,12 @@ class ExampleApp(QtWidgets.QMainWindow, Ui_MainWindow):
     # handle the redrawing of vlines, hlines, cutting data etc.
     def onclickArpes(self, event):
         if self.EDITING_ARPES and event.xdata and event.ydata:
-
-            print('%s click: button=%d, x=%d, y=%d, xdata=%f, ydata=%f' %
-                    ('double' if event.dblclick else 'single', event.button, 
-                    event.x, event.y, event.xdata, event.ydata))
             # take horizontal/vertical cut for Profile with left mouse button
             if event.button == 1:
                 if self.ARPES_Dict['line']:
                     self.ARPES_Dict['line'].remove()
                     self.ARPES_Dict['linetype'] = None
                     self.ARPES_Dict['lineval'] = None
-
                 dim = "a"
                 val = 0.
                 if self.MODE == "EDC":
