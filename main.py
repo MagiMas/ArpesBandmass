@@ -211,7 +211,7 @@ class ExampleApp(QtWidgets.QMainWindow, Ui_MainWindow):
             xvals.append(point[0])
             yvals.append(point[1])
         self.ARPES_Dict['scatterpointsPlot'] = self.WDGT_ARPES.canvas.ax.scatter(xvals, yvals, color='#c65411')
-        self.WDGT_ARPES.canvas.draw_idle()
+        self.WDGT_ARPES.canvas.draw()
 
     # add a fitpoint according to positions
     def addFitPointARPES(self):
@@ -352,9 +352,15 @@ class ExampleApp(QtWidgets.QMainWindow, Ui_MainWindow):
     # load actual file, put it into a Spectra class and plot on ARPES ax
     def loadARPES(self):
         try:
+            if self.ARPES_Dict['scatterpointsPlot']:
+                self.ARPES_Dict['scatterpointsPlot'].remove()
+            self.ARPES_Dict['scatterpointsPlot'] = None
+            self.ARPES_Dict['scatterpoints'] = []
+            if self.EDITING_ARPES:
+                self.changeEditingArpes()
             self.Spec = Bf.load_a_spectrum(os.path.join(self.DIR, self.CB_Files.currentText()))
             self.Spec.plot_data_on_ax(self.WDGT_ARPES.canvas.ax, plot=False)
-            self.WDGT_ARPES.canvas.draw()
+            self.WDGT_ARPES.canvas.draw_idle()
         except:
             print("Something went wrong with loading the Spectrum!")
 

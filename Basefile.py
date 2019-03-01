@@ -266,14 +266,20 @@ class Spectra(SpectraBase):
         simple fast plotting to check the data without much features
         :return:
         """
+        ims = ax.get_images()
+        for im in ims:
+            if im:
+                im.remove()
         ax.imshow(self.IDATA(self.xvals,self.yvals),
                   extent=[self.xLimits[0],self.xLimits[1],self.yLimits[1],self.yLimits[0]],
                   aspect='auto')
-        if self.kSpace:
-            ax.set_xlabel(self.xlabelK)
-        else:
-            ax.set_xlabel(self.xlabel)
-        ax.set_ylabel(self.ylabel)
+        ax.relim()
+
+        #if self.kSpace:
+        #    ax.set_xlabel(self.xlabelK)
+        #else:
+        #    ax.set_xlabel(self.xlabel)
+        #ax.set_ylabel(self.ylabel)
         #plt.gca().invert_yaxis()
         if mirrorY:
             ax.invert_yaxis()
