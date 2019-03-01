@@ -52,52 +52,6 @@ class Spectra1D(object):
         self.reinterpolate_data()
 
 
-#class Spectra1DSave(object):
-#    """
-#    Holds a 1d spectrum.
-#    """
-#    def __init__(self, xdata, ydata, name, directory):
-#        self.PATH = directory
-#        self.NAME = name
-#        print xdata
-#        self.XDATA = xdata
-#        self.YDATA = ydata
-#        #self.IDATA = interp1d_picklable(xdata,ydata)
-#        self.xlabel = ""
-#        self.ylabel = ""
-#
-#    def plot1D(self):
-#        """
-#        Simple plotting procedure for fast checking
-#        :return:
-#        """
-#        fig = plt.figure(figsize=(4, 3), dpi=200)
-#        ax = fig.add_subplot(111)
-#        ax.plot(self.XDATA, self.XDATA)
-#        ax.set_xlabel(self.xlabel)
-#        ax.set_ylabel(self.ylabel)
-#        plt.tight_layout()
-#
-#    def reinterpolate_data(self):
-#        """reinterpolate data after adjustment"""
-#        #self.XDATA = interp1d(self.XDATA, self.YDATA)
-#        pass#
-#
-#    def adjust_range(self, dim, value):
-#        """
-#        Adjusts the x or y range by the given value.
-#        :param dim: put "x" or "y" as string to define dimension
-#        :param value: float to add to the range
-#        """
-#        if dim == "x":
-#            self.XDATA += value
-#        elif dim == "y":
-#            self.YDATA += value
-#        else:
-#            print "wrong dimension"
-#        self.reinterpolate_data()
-
-
 class SpectraBase(object):
     """
     Holds all the data of an ARPES spectrum, intensities and xLimits/yLimits. Add features for data analysis here
@@ -439,25 +393,6 @@ def load_a_spectrum(filelocation, transpose=True, mirrorY=True):
 
 
 if __name__ =='__main__':
-    #dat = np.loadtxt('C:\\Users\\Niels Ehlen\\Desktop\\SnSe\\data.txt')
-    #Spec = Spectra(dat,[-23.943889, 23.943889],[66.158410, 67.841590],
-    #               'C:\\Users\\Niels Ehlen\\Desktop\\SnSe\\i05-80039.axe')
     Spec = load_a_spectrum(r'C:\Users\Niels Ehlen\PycharmProjects\DataFitting\temp\temp.txt')
-    #Spec.cutData("y", 66.2, 67.8)
-    #Spec.adjust_Fermilevel([-17.72,-12.75,-7.75,-2.36,0.29,5.5,10.9,14.0,18.5],
-    #                       [67.33,67.3475,67.3635,67.3678,67.3718,67.369,67.36,67.351,67.33])
-
-    #Spec.secondDerivative("x",3,10)
-    #Spec.cutData("x", -16, 16)
-    #Spec.adjust_range("x",0)
-    #Spec.convertToKSpace()
-    #Spec.adjust_range("y",-67.33)
-
-    #x,y =  Spec.lineprofileY(0,0.1)
-    #print(x)
-
     Spec.plot_data()
-    #plt.figure()
-    #plt.plot(x,y)
-
     plt.show()
