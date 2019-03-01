@@ -22,6 +22,7 @@ linear_dict = {
     'name' : 'linear',
     'function_template': 'a0*(x-a1) + a2',
     'start_parameters' : [1., 1., 1.],
+    'parameter_names' : ['intensity', 'x0', 'const_background'],
     'bounds' : ([-np.inf, -np.inf, -np.inf], [np.inf, np.inf, np.inf])
 }
 
@@ -30,6 +31,7 @@ quadratic_dict = {
     'name' : 'quadratic',
     'function_template' : 'a0 * (x-a1)**2 + a2',
     'start_parameters' : [1., 1., 1.],
+    'parameter_names' : ['intensity', 'x0', 'const_background'],
     'bounds' : ([-np.inf, -np.inf, -np.inf], [np.inf, np.inf, np.inf])
 }
 
@@ -38,6 +40,7 @@ lorentzian_dict = {
     'name' : 'lorentzian',
     'function_template' : 'a0*(1/(pi*a1))*(a1^2/((x-a2)^2+a1^2)) + a3*(x-a2) + a4',
     'start_parameters' : [1., 1., 1., 1., 1.],
+    'parameter_names' : ['intensity', 'broadening', 'x0', 'slope_linear_background', 'const_background'],
     'bounds' : ([-np.inf, -np.inf, -np.inf, -np.inf, -np.inf], [np.inf, np.inf, np.inf, np.inf, np.inf])
 }
 
@@ -46,6 +49,7 @@ gaussian_dict = {
     'name' : 'gaussian',
     'function_template' : 'a0*(1/(a1*sqrt(2*pi)))*exp(-0.5*((x-a2)/a1)^2) + a3*(x-a2)+a4',
     'start_parameters' : [1., 1., 1., 1., 1.],
+    'parameter_names' : ['intensity', 'broadening', 'x0', 'slope_linear_background', 'const_background'],
     'bounds' : ([-np.inf, -np.inf, -np.inf, -np.inf, -np.inf], [np.inf, np.inf, np.inf, np.inf, np.inf])
 }
 

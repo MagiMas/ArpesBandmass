@@ -121,6 +121,45 @@ class ExampleApp(QtWidgets.QMainWindow, Ui_MainWindow):
         # Manage Fitting ARPES
         self.PB_Fit_ARPES.clicked.connect(self.fitARPES)
 
+        # Manage Fitting Profile
+        self.PB_FitProf.clicked.connect(self.fitProfile)
+
+    # Manage the fitting in the Profile Plot
+    def fitProfile(self):
+        if not self.Profile_Dict['lineLeft'] or not self.Profile_Dict['lineRight']:
+            print("Please give left and right border of fit")
+        else:
+            xfit = np.linspace(self.Profile_Dict['lineLeftval'], self.Profile_Dict['lineRightval'], 200)
+            try:
+                if self.Profile_Dict['fitPlot']:
+                    self.Profile_Dict['fitPlot'].remove()
+                self.Profile_Dict['fitPlot'] = None
+                ydata = self.Spec1D.IDATA(xfit)
+                fitting = FitClass(xfit, ydata, self.DCFIT_DICT)
+                fitting.do_fit()
+                yfit = fitting.fitcurve(xfit)
+                self.Profile_Dict['fitPlot'], = self.WDGT_Profile.canvas.ax.plot(xfit, yfit, color='k')
+
+                i_x0 = self.DCFIT_DICT['parameter_names'].index('x0')
+                peakX = fitting.POPT[i_x0]
+                peakY = fitting.fitcurve([peakX])
+
+                if self.Profile_Dict['peakScatter']:
+                    self.Profile_Dict['peakScatter'].remove()
+                self.Profile_Dict['peakX'] = peakX
+                self.Profile_Dict['peakY'] = peakY
+                self.Profile_Dict['peakScatter'] = self.WDGT_Profile.canvas.ax.scatter(peakX, peakY, color='#c65411')
+
+                output = ''
+                i = 0
+                for element in fitting.POPT:
+                    output += 'a%d = ' % i + str(element) + '\n'
+                    i += 1
+                self.TE_ARPES_output.setText(output)
+            except:
+                print("couldn't fit Profile")
+
+            self.WDGT_Profile.canvas.draw_idle()
     # manage the fitting in ARPES window
     def fitARPES(self):
         if not self.ARPES_Dict['scatterpoints']:
@@ -133,7 +172,7 @@ class ExampleApp(QtWidgets.QMainWindow, Ui_MainWindow):
             for point in self.ARPES_Dict['scatterpoints']:
                 xdat.append(point[0])
                 ydat.append(point[1])
-            print(self.BANDFIT_DICT['start_parameters'])
+            #print(self.BANDFIT_DICT['start_parameters'])
             fitting = FitClass(xdat, ydat, self.BANDFIT_DICT)
             try:
                 fitting.do_fit()
@@ -178,10 +217,13 @@ class ExampleApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def addFitPointARPES(self):
         try:
             px, py = self.Profile_Dict['peakX'], self.ARPES_Dict['lineval']
-            if self.MODE == "MDC":
-                self.ARPES_Dict['scatterpoints'].append((px,py))
+            if px and py:
+                if self.MODE == "MDC":
+                    self.ARPES_Dict['scatterpoints'].append((px,py))
+                else:
+                    self.ARPES_Dict['scatterpoints'].append((py,px))
             else:
-                self.ARPES_Dict['scatterpoints'].append((py,px))
+                print("no real fitpoint")
             self.plotFitPointsARPES()
         except:
             print("Couldn't add fitpoint")
@@ -221,7 +263,7 @@ class ExampleApp(QtWidgets.QMainWindow, Ui_MainWindow):
                         self.Profile_Dict['peakScatter'].remove()
                     ypoint = self.Spec1D.IDATA(event.xdata)
                     self.Profile_Dict['peakX'] = event.xdata
-                    self.Profile_Dict['peakY'] = event.ydata
+                    self.Profile_Dict['peakY'] = ypoint
                     self.Profile_Dict['peakScatter'] = self.WDGT_Profile.canvas.ax.scatter(event.xdata, ypoint, color='#c65411')
                     
                 except:
