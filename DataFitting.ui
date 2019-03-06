@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>938</width>
-    <height>640</height>
+    <width>1143</width>
+    <height>692</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -118,7 +118,7 @@ Line{
     <item row="0" column="0">
      <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1,0">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
+       <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1,1">
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
@@ -128,6 +128,12 @@ Line{
             </property>
             <item>
              <widget class="QPushButton" name="PB_Dir">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text">
                <string>Directory</string>
               </property>
@@ -136,7 +142,7 @@ Line{
             <item>
              <widget class="QLineEdit" name="LE_Dir">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -156,16 +162,35 @@ Line{
           </item>
           <item>
            <widget class="QPushButton" name="PB_Dir_Load">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>Load Files</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="CB_Files"/>
+           <widget class="QComboBox" name="CB_Files">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QPushButton" name="PB_File">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>Load</string>
             </property>
@@ -271,7 +296,7 @@ Line{
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,1">
             <item>
              <widget class="QLabel" name="label_2">
               <property name="sizePolicy">
@@ -288,7 +313,7 @@ Line{
             <item>
              <widget class="QLineEdit" name="LE_Update_Bandfit">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -317,6 +342,12 @@ Line{
             </item>
             <item>
              <widget class="QLabel" name="LBL_Fitfunc">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text">
                <string>TextLabel</string>
               </property>
@@ -343,6 +374,12 @@ Line{
           </item>
           <item>
            <widget class="QTextEdit" name="TE_ARPES_output">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="readOnly">
              <bool>true</bool>
             </property>
@@ -375,9 +412,15 @@ Line{
         </item>
         <item>
          <widget class="MPL_WIDGET" name="WDGT_ARPES" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="minimumSize">
            <size>
-            <width>400</width>
+            <width>500</width>
             <height>300</height>
            </size>
           </property>

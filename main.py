@@ -418,6 +418,7 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.Spec = Bf.load_a_spectrum(os.path.join(self.DIR, self.CB_Files.currentText()))
             self.Spec.plot_data_on_ax(self.WDGT_ARPES.canvas.ax, plot=False)
             self.WDGT_ARPES.canvas.draw_idle()
+            self.WDGT_ARPES.toolbar.update()
         except:
             print("Something went wrong with loading the Spectrum!")
 
