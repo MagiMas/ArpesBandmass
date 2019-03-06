@@ -20,7 +20,7 @@ class UpdateDirectoryFile(QtCore.QThread):
         f.close()
         #self.sig1.emit(self.source_txt)
 
-class ExampleApp(QtWidgets.QMainWindow, Ui_MainWindow):
+class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -123,6 +123,54 @@ class ExampleApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
         # Manage Fitting Profile
         self.PB_FitProf.clicked.connect(self.fitProfile)
+        self.ChB_Estimate_Params_Profile.setChecked(True)
+        self.EstimateProfileParams = self.ChB_Estimate_Params_Profile.isChecked()
+        self.ChB_Estimate_Params_Profile.stateChanged.connect(self.EstimateFitParamsProfileBool)
+
+    # Manage the Estimation of the Profile Parameters
+    def EstimateFitParamsProfile(self):
+        if self.Profile_Dict['lineLeft'] and self.Profile_Dict['lineRight']:
+            xdata = np.linspace(self.Profile_Dict['lineLeftval'], self.Profile_Dict['lineRightval'], 200)
+            ydata = self.Spec1D.IDATA(xdata)
+            intensity = np.amax(ydata)
+            x0 = 0.5*(self.Profile_Dict['lineRightval'] - self.Profile_Dict['lineLeftval'])
+            if self.Profile_Dict['lineRightval'] > self.Profile_Dict['lineRightval']:
+                x0 = self.Profile_Dict['lineLeftval'] - 0.5*(self.Profile_Dict['lineRightval'] - self.Profile_Dict['lineLeftval']) 
+            else:
+                x0 = self.Profile_Dict['lineLeftval'] + 0.5*(self.Profile_Dict['lineRightval'] - self.Profile_Dict['lineLeftval']) 
+            constBkg = np.amin(ydata)
+            broadening = 0.33*np.abs(self.Profile_Dict['lineRightval'] - self.Profile_Dict['lineLeftval'])
+            params = self.DCFIT_DICT['start_parameters']
+            intensity -= constBkg
+            try:
+                i_intensity = self.DCFIT_DICT['parameter_names'].index('intensity')
+                params[i_intensity] = intensity
+            except:
+                print('no intensity parameter found')
+            try:
+                i_broadening = self.DCFIT_DICT['parameter_names'].index('broadening')
+                params[i_broadening] = broadening
+            except:
+                print("No broadening parameter found")
+            try:
+                i_x0 = self.DCFIT_DICT['parameter_names'].index('x0')
+                params[i_x0] = x0
+            except:
+                print("No x0 parameter found")
+            try:
+                i_constBkg = self.DCFIT_DICT['parameter_names'].index('const_background')
+                params[i_constBkg] = constBkg
+            except:
+                print("No const_background parameter found")
+
+            self.DCFIT_DICT['start_parameters'] = params
+            print("Estimated parameters: ", params)
+            self.LE_Parameters.setText(', '.join("%.1E" % e for e in self.DCFIT_DICT['start_parameters']))
+        else:
+            print("Please define left and right border")
+
+    def EstimateFitParamsProfileBool(self):
+        self.EstimateProfileParams = self.ChB_Estimate_Params_Profile.isChecked()
 
     # Manage the fitting in the Profile Plot
     def fitProfile(self):
@@ -160,6 +208,7 @@ class ExampleApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 print("couldn't fit Profile")
 
             self.WDGT_Profile.canvas.draw_idle()
+
     # manage the fitting in ARPES window
     def fitARPES(self):
         if not self.ARPES_Dict['scatterpoints']:
@@ -257,6 +306,7 @@ class ExampleApp(QtWidgets.QMainWindow, Ui_MainWindow):
     # Manage the Interactive elements of the Profile Graph
     def onclickProfile(self,event):
         if self.EDITING_PROFILE and event.xdata and event.ydata:
+            # manually add scatterpoint
             if event.button == 2:
                 try:
                     if self.Profile_Dict['peakScatter']:
@@ -269,20 +319,24 @@ class ExampleApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 except:
                     print("No Spec1D object")
                     raise
-                
+            # add left border for fit
             if event.button == 1:
                 if self.Profile_Dict['lineLeft']:
                     self.Profile_Dict['lineLeft'].remove()
                     self.Profile_Dict['lineLeftval'] = None
                 self.Profile_Dict['lineLeft'] = self.WDGT_Profile.canvas.ax.axvline(event.xdata, color='#41701c')
                 self.Profile_Dict['lineLeftval'] = event.xdata
-
+                if self.EstimateProfileParams:
+                    self.EstimateFitParamsProfile()
+            # add right border for fit
             if event.button == 3:
                 if self.Profile_Dict['lineRight']:
                     self.Profile_Dict['lineRight'].remove()
                     self.Profile_Dict['lineRightval'] = None
                 self.Profile_Dict['lineRight'] = self.WDGT_Profile.canvas.ax.axvline(event.xdata, color='#601c70')
                 self.Profile_Dict['lineRightval'] = event.xdata
+                if self.EstimateProfileParams:
+                    self.EstimateFitParamsProfile()
                 
             self.WDGT_Profile.canvas.draw()
                 
@@ -356,6 +410,9 @@ class ExampleApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.ARPES_Dict['scatterpointsPlot'].remove()
             self.ARPES_Dict['scatterpointsPlot'] = None
             self.ARPES_Dict['scatterpoints'] = []
+            if self.ARPES_Dict['fitplot']:
+                self.ARPES_Dict['fitplot'].remove()
+            self.ARPES_Dict['fitplot'] = None
             if self.EDITING_ARPES:
                 self.changeEditingArpes()
             self.Spec = Bf.load_a_spectrum(os.path.join(self.DIR, self.CB_Files.currentText()))
@@ -462,7 +519,7 @@ class ExampleApp(QtWidgets.QMainWindow, Ui_MainWindow):
 def main():
     app = QtWidgets.QApplication(sys.argv)
     app.setStyle("plastique")
-    form = ExampleApp()
+    form = ARPESMassApp()
     form.show()
     app.exec_()
 

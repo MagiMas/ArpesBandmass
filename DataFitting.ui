@@ -33,6 +33,10 @@
 	background: rgb(50, 50, 50);
 }
 
+QCheckBox{
+		color:rgb(186, 184, 172);
+}
+
 QLineEdit{
 	color:rgb(186, 184, 172);
 	background:rgb(80, 80, 80);
@@ -481,17 +485,31 @@ Line{
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="PB_Update">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Update</string>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout_9">
+            <item>
+             <widget class="QPushButton" name="PB_Update">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Update</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="ChB_Estimate_Params_Profile">
+              <property name="toolTip">
+               <string>Estimate the Fit parameters between left and right border</string>
+              </property>
+              <property name="text">
+               <string>Estimate</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
            <widget class="Line" name="line_6">
@@ -626,8 +644,8 @@ Line{
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_2"/>
   <buttongroup name="buttonGroup"/>
+  <buttongroup name="buttonGroup_2"/>
   <buttongroup name="buttonGroup_3"/>
  </buttongroups>
 </ui>

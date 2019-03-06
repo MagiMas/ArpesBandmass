@@ -26,6 +26,10 @@ class Ui_MainWindow(object):
 "    background: rgb(50, 50, 50);\n"
 "}\n"
 "\n"
+"QCheckBox{\n"
+"        color:rgb(186, 184, 172);\n"
+"}\n"
+"\n"
 "QLineEdit{\n"
 "    color:rgb(186, 184, 172);\n"
 "    background:rgb(80, 80, 80);\n"
@@ -298,6 +302,9 @@ class Ui_MainWindow(object):
         self.LBL_Parameters = QtWidgets.QLabel(self.centralWidget)
         self.LBL_Parameters.setObjectName("LBL_Parameters")
         self.verticalLayout_3.addWidget(self.LBL_Parameters)
+        self.horizontalLayout_9 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_9.setSpacing(6)
+        self.horizontalLayout_9.setObjectName("horizontalLayout_9")
         self.PB_Update = QtWidgets.QPushButton(self.centralWidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -305,7 +312,11 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.PB_Update.sizePolicy().hasHeightForWidth())
         self.PB_Update.setSizePolicy(sizePolicy)
         self.PB_Update.setObjectName("PB_Update")
-        self.verticalLayout_3.addWidget(self.PB_Update)
+        self.horizontalLayout_9.addWidget(self.PB_Update)
+        self.ChB_Estimate_Params_Profile = QtWidgets.QCheckBox(self.centralWidget)
+        self.ChB_Estimate_Params_Profile.setObjectName("ChB_Estimate_Params_Profile")
+        self.horizontalLayout_9.addWidget(self.ChB_Estimate_Params_Profile)
+        self.verticalLayout_3.addLayout(self.horizontalLayout_9)
         self.line_6 = QtWidgets.QFrame(self.centralWidget)
         self.line_6.setFrameShadow(QtWidgets.QFrame.Plain)
         self.line_6.setFrameShape(QtWidgets.QFrame.HLine)
@@ -398,6 +409,8 @@ class Ui_MainWindow(object):
         self.LE_Parameters.setText(_translate("MainWindow", "Enter Parameters"))
         self.LBL_Parameters.setText(_translate("MainWindow", "TextLabel"))
         self.PB_Update.setText(_translate("MainWindow", "Update"))
+        self.ChB_Estimate_Params_Profile.setToolTip(_translate("MainWindow", "Estimate the Fit parameters between left and right border"))
+        self.ChB_Estimate_Params_Profile.setText(_translate("MainWindow", "Estimate"))
         self.PB_FitProf.setText(_translate("MainWindow", "Fit Profile"))
         self.PB_Profile_Editing.setText(_translate("MainWindow", "Enable Editing"))
         self.PB_P2A.setText(_translate("MainWindow", "Peak 2 ARPES"))
