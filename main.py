@@ -42,7 +42,7 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
         # Manage Editing for MDC and EDC
         self.EDITING_ARPES = False
-        self.PB_DC_Editing.clicked.connect(self.changeEditingArpes)
+        self.PB_DC_Editing.released.connect(self.changeEditingArpes)
 
         # Manage Radio Button for Linear or Quadratic Band Fit
         self.BANDFIT_DICT = ffs.fitfunc_dict['quad']
@@ -53,7 +53,7 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
         # Manage Editing for Profile
         self.EDITING_PROFILE = True
-        self.PB_Profile_Editing.clicked.connect(self.changeEditingProfile)
+        self.PB_Profile_Editing.released.connect(self.changeEditingProfile)
         self.PB_Profile_Editing.setText('Disable Editing')
 
         # Manage LineEdit for Input of Starting Fit Parameters for Bandfit
@@ -61,7 +61,7 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.LBL_Fitfunc.setText('\t' + self.BANDFIT_DICT['function_template'])
 
         # Manage Pushbutton to update Fit Parameters for Bandfit
-        self.PB_Update_Bandfit.clicked.connect(self.updateBandFit_parameters)
+        self.PB_Update_Bandfit.released.connect(self.updateBandFit_parameters)
 
         # Manage Radio Button for Lorentzian or Gaussian EDC/MDC Fit
         self.DCFIT_DICT = ffs.fitfunc_dict['lorentz']
@@ -75,16 +75,16 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.LBL_Parameters.setText(self.DCFIT_DICT['function_template'])
 
         # Manage Pushbutton to update Fit parameters for EDC/MDC Fit
-        self.PB_Update.clicked.connect(self.updateDCFit_parameters)
+        self.PB_Update.released.connect(self.updateDCFit_parameters)
 
         # Manage File Loading
         f_ = open('Last_Directory.txt', 'r')
         self.DIR = f_.readline()
         f_.close()
         self.LE_Dir.setText(self.DIR)
-        self.PB_Dir.clicked.connect(self.chooseDir)
-        self.PB_Dir_Load.clicked.connect(self.loadDir)
-        self.PB_File.clicked.connect(self.loadARPES)
+        self.PB_Dir.released.connect(self.chooseDir)
+        self.PB_Dir_Load.released.connect(self.loadDir)
+        self.PB_File.released.connect(self.loadARPES)
 
         # Manage ARPES FIGURE
         self.ARPES_Dict = {
@@ -116,13 +116,13 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.WDGT_Profile.canvas.mpl_connect('button_press_event', self.onclickProfile)
 
         # Add Fit Point from Profile to ARPES Graph
-        self.PB_P2A.clicked.connect(self.addFitPointARPES)
+        self.PB_P2A.released.connect(self.addFitPointARPES)
 
         # Manage Fitting ARPES
-        self.PB_Fit_ARPES.clicked.connect(self.fitARPES)
+        self.PB_Fit_ARPES.released.connect(self.fitARPES)
 
         # Manage Fitting Profile
-        self.PB_FitProf.clicked.connect(self.fitProfile)
+        self.PB_FitProf.released.connect(self.fitProfile)
         self.ChB_Estimate_Params_Profile.setChecked(True)
         self.EstimateProfileParams = self.ChB_Estimate_Params_Profile.isChecked()
         self.ChB_Estimate_Params_Profile.stateChanged.connect(self.EstimateFitParamsProfileBool)
@@ -529,16 +529,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-    #Spec = Bf.load_a_spectrum(r'C:\Users\Niels Ehlen\PycharmProjects\DataFitting\temp\temp.txt')
-    #Spec.cutData("x", 0.5, 0.65)
-    #x,y =  Spec.lineprofileX(0.1,0.001)
-    #plt.plot(x,y)
-    #fitfunctionDict = ffs.fitfunc_list[2]
-    #fitfunctionDict['start_parameters'] = [1e8, 1., 0.6, 1e6]
-    #fitTest = FitClass(x,y,fitfunctionDict)
-    #fitTest.do_fit()
-    #xvals = np.linspace(-1.,1.,500)
-    #yvals = fitTest.fitcurve(xvals)
-   # plt.plot(xvals,yvals)
-   # plt.show()
