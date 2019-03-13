@@ -8,6 +8,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 import os
 
+with open('Last_Directory.txt', 'r') as f:
+    plt.rcParams["savefig.directory"] = f.readline()
+    f.close()
+
 class UpdateDirectoryFile(QtCore.QThread):
     #sig1 = QtCore.pyqtSignal(str)
     def __init__(self, lineftxt, parent=None):
@@ -18,6 +22,7 @@ class UpdateDirectoryFile(QtCore.QThread):
         f = open('Last_Directory.txt', 'w')
         f.write(self.source_txt)
         f.close()
+        plt.rcParams['savefig.directory'] = self.source_txt
         #self.sig1.emit(self.source_txt)
 
 class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
