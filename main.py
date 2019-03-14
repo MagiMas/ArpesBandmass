@@ -272,14 +272,21 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
     # add a fitpoint according to positions
     def addFitPointARPES(self):
         try:
-            px, py = self.Profile_Dict['peakX'], self.ARPES_Dict['lineval']
-            if px and py:
-                if self.MODE == "MDC":
-                    self.ARPES_Dict['scatterpoints'].append((px,py))
-                else:
-                    self.ARPES_Dict['scatterpoints'].append((py,px))
+            if self.MODE == "Free":
+                x = self.Profile_Dict['peakX']
+                start, stop = self.ARPES_Dict['linevalsFree']
+
+                px, py = np.array(start) + x * (np.array(stop) - np.array(start))/np.linalg.norm((np.array(stop) - np.array(start)))
+                self.ARPES_Dict['scatterpoints'].append((px,py))
             else:
-                print("no real fitpoint")
+                px, py = self.Profile_Dict['peakX'], self.ARPES_Dict['lineval']
+                if px and py:
+                    if self.MODE == "MDC":
+                        self.ARPES_Dict['scatterpoints'].append((px,py))
+                    else:
+                        self.ARPES_Dict['scatterpoints'].append((py,px))
+                else:
+                    print("no real fitpoint")
             self.plotFitPointsARPES()
         except:
             print("Couldn't add fitpoint")
@@ -344,7 +351,6 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.Profile_Dict['lineRightval'] = event.xdata
                 if self.EstimateProfileParams:
                     self.EstimateFitParamsProfile()
-                
             self.WDGT_Profile.canvas.draw()
                 
 
