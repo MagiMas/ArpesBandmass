@@ -275,7 +275,6 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
             if self.MODE == "Free":
                 x = self.Profile_Dict['peakX']
                 start, stop = self.ARPES_Dict['linevalsFree']
-
                 px, py = np.array(start) + x * (np.array(stop) - np.array(start))/np.linalg.norm((np.array(stop) - np.array(start)))
                 self.ARPES_Dict['scatterpoints'].append((px,py))
             else:
