@@ -44,6 +44,7 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.RB_Mode_MDC.setChecked(True)
         self.RB_Mode_MDC.toggled.connect(lambda:self.changeMode("MDC"))
         self.RB_Mode_EDC.toggled.connect(lambda:self.changeMode("EDC"))
+        self.RB_Mode_Free.toggled.connect(lambda:self.changeMode("Free"))
 
         # Manage Editing for MDC and EDC
         self.EDITING_ARPES = False
@@ -96,6 +97,7 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
             'line' : None,
             'lineval' : None,
             'linetype' : None,
+            'linevalsFree' : [[], []],
             'scatterpoints' : [],
             'scatterpointsPlot' : None,
             'fitplot' : None
@@ -350,29 +352,42 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def onclickArpes(self, event):
         if self.EDITING_ARPES and event.xdata and event.ydata:
             # take horizontal/vertical cut for Profile with left mouse button
-            if event.button == 1:
-                if self.ARPES_Dict['line']:
-                    self.ARPES_Dict['line'].remove()
-                    self.ARPES_Dict['linetype'] = None
-                    self.ARPES_Dict['lineval'] = None
-                dim = "a"
-                val = 0.
-                if self.MODE == "EDC":
-                    self.ARPES_Dict['line'] = self.WDGT_ARPES.canvas.ax.axvline(event.xdata, color='k')
-                    self.ARPES_Dict['linetype'] = 'EDC'
-                    self.ARPES_Dict['lineval'] = event.xdata
-                    val = event.xdata
-                    dim = "y"
-                elif self.MODE == "MDC":
-                    self.ARPES_Dict['line'] = self.WDGT_ARPES.canvas.ax.axhline(event.ydata, color='k')
-                    self.ARPES_Dict['linetype'] = 'MDC'
-                    self.ARPES_Dict['lineval'] = event.ydata
-                    val = event.ydata
-                    dim = "x"
+            if self.MODE == "Free":
+                if event.button == 1:
+                    if self.ARPES_Dict['line']:
+                        self.ARPES_Dict['line'].remove()
+                        self.ARPES_Dict['linetype'] = "Free"
+                        self.ARPES_Dict['lineval'] = None
+                        self.ARPES_Dict['line'] = None
+                    self.ARPES_Dict['linevalsFree'][0] = [event.xdata, event.ydata]
+                elif event.button == 3:
+                    if self.ARPES_Dict['line']:
+                        self.ARPES_Dict['line'].remove()
+                        self.ARPES_Dict['linetype'] = "Free"
+                        self.ARPES_Dict['lineval'] = None
+                        self.ARPES_Dict['line'] = None
+                    self.ARPES_Dict['linevalsFree'][1] = [event.xdata, event.ydata]
+                # remove scatterpoints with middle mouse click
+                elif event.button == 2:
+                    if self.ARPES_Dict['scatterpoints']:
+                        dist_threshold = 0.1
+                        distances = []
+                        for point in self.ARPES_Dict['scatterpoints']:
+                            dist = np.sqrt((event.xdata - point[0])**2 + (event.ydata - point[1])**2)
+                            distances.append(dist)
+                        
+                        mindist = min(distances)
+                        mindist_i = distances.index(min(distances))
+                        if mindist < dist_threshold:
+                            self.ARPES_Dict['scatterpoints'].pop(mindist_i)
+                            self.plotFitPointsARPES()
                 try:
+                    start, stop = self.ARPES_Dict['linevalsFree']
+                    if event.button != 2:
+                        self.ARPES_Dict['line'], = self.WDGT_ARPES.canvas.ax.plot([start[0], stop[0]], [start[1], stop[1]], color='k')
                     self.clearProfileGraph()
                     #self.WDGT_Profile.canvas.ax.relim()
-                    tx,ty = self.Spec.lineprofileXY(dim=dim, val=val)
+                    tx,ty = self.Spec.lineprofileFree(start, stop, 200)
                     self.Spec1D = Bf.Spectra1D(tx, ty)
                     self.Profile_Dict['dataX'] = tx
                     self.Profile_Dict['dataY'] = ty
@@ -383,29 +398,63 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
                     print("Couldn't load Spectra object")
                 self.WDGT_ARPES.canvas.draw()
                 self.WDGT_Profile.canvas.draw()
-            # add scatterpoint with middle mouse button
-            elif event.button == 2:
-                try:
-                    px, py = event.xdata, event.ydata
-                    self.ARPES_Dict['scatterpoints'].append((px,py))
-                    self.plotFitPointsARPES()
-                except:
-                    print("Couldn't add fitpoint")
-            
-            # remove scatterpoints with right mouse click
-            elif event.button == 3:
-                if self.ARPES_Dict['scatterpoints']:
-                    dist_threshold = 0.1
-                    distances = []
-                    for point in self.ARPES_Dict['scatterpoints']:
-                        dist = np.sqrt((event.xdata - point[0])**2 + (event.ydata - point[1])**2)
-                        distances.append(dist)
-                    
-                    mindist = min(distances)
-                    mindist_i = distances.index(min(distances))
-                    if mindist < dist_threshold:
-                        self.ARPES_Dict['scatterpoints'].pop(mindist_i)
+            else:
+                if event.button == 1:
+                    if self.ARPES_Dict['line']:
+                        self.ARPES_Dict['line'].remove()
+                        self.ARPES_Dict['linetype'] = None
+                        self.ARPES_Dict['lineval'] = None
+                    dim = "a"
+                    val = 0.
+                    if self.MODE == "EDC":
+                        self.ARPES_Dict['line'] = self.WDGT_ARPES.canvas.ax.axvline(event.xdata, color='k')
+                        self.ARPES_Dict['linetype'] = 'EDC'
+                        self.ARPES_Dict['lineval'] = event.xdata
+                        val = event.xdata
+                        dim = "y"
+                    elif self.MODE == "MDC":
+                        self.ARPES_Dict['line'] = self.WDGT_ARPES.canvas.ax.axhline(event.ydata, color='k')
+                        self.ARPES_Dict['linetype'] = 'MDC'
+                        self.ARPES_Dict['lineval'] = event.ydata
+                        val = event.ydata
+                        dim = "x"
+                    try:
+                        self.clearProfileGraph()
+                        #self.WDGT_Profile.canvas.ax.relim()
+                        tx,ty = self.Spec.lineprofileXY(dim=dim, val=val)
+                        self.Spec1D = Bf.Spectra1D(tx, ty)
+                        self.Profile_Dict['dataX'] = tx
+                        self.Profile_Dict['dataY'] = ty
+                        self.Profile_Dict['linePlot'], = self.WDGT_Profile.canvas.ax.plot(tx, ty, color='#1165c6')
+                        self.WDGT_Profile.canvas.ax.set_xlim(np.amin(tx)-0.05*np.abs(np.amin(tx) - np.amax(tx)), np.amax(tx)+0.05*np.abs(np.amin(tx) - np.amax(tx)))
+                        self.WDGT_Profile.canvas.ax.set_ylim(np.amin(ty)-0.05*np.abs(np.amin(ty) - np.amax(ty)), np.amax(ty)+0.05*np.abs(np.amin(ty) - np.amax(ty)))
+                    except:
+                        print("Couldn't load Spectra object")
+                    self.WDGT_ARPES.canvas.draw()
+                    self.WDGT_Profile.canvas.draw()
+                # add scatterpoint with right mouse button
+                elif event.button == 3:
+                    try:
+                        px, py = event.xdata, event.ydata
+                        self.ARPES_Dict['scatterpoints'].append((px,py))
                         self.plotFitPointsARPES()
+                    except:
+                        print("Couldn't add fitpoint")
+                
+                # remove scatterpoints with middle mouse click
+                elif event.button == 2:
+                    if self.ARPES_Dict['scatterpoints']:
+                        dist_threshold = 0.1
+                        distances = []
+                        for point in self.ARPES_Dict['scatterpoints']:
+                            dist = np.sqrt((event.xdata - point[0])**2 + (event.ydata - point[1])**2)
+                            distances.append(dist)
+                        
+                        mindist = min(distances)
+                        mindist_i = distances.index(min(distances))
+                        if mindist < dist_threshold:
+                            self.ARPES_Dict['scatterpoints'].pop(mindist_i)
+                            self.plotFitPointsARPES()
 
 
     # load actual file, put it into a Spectra class and plot on ARPES ax
@@ -471,13 +520,23 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
             print("Editing Profile disabled")
             self.PB_Profile_Editing.setText('Enable Editing')
 
-    # change between MDC and EDC mode for individual curves, update figures accordingly
+    # change between MDC, EDC and Free mode for individual curves, update figures accordingly
     def changeMode(self, button):
         self.MODE = button
         if button == "MDC":
             self.WDGT_Profile.canvas.ax.set_xlabel(r'Wavevector [$\mathrm{\AA^{-1}}$]')
         elif button == "EDC":
             self.WDGT_Profile.canvas.ax.set_xlabel(r'Energy [eV]')
+        elif button == "Free":
+            print("Free")
+            self.WDGT_Profile.canvas.ax.set_xlabel(r'')
+            if self.ARPES_Dict['line']:
+                self.ARPES_Dict['line'].remove()
+            self.ARPES_Dict['line'] = None
+
+            self.clearProfileGraph()
+            self.WDGT_ARPES.canvas.draw_idle()
+            self.WDGT_Profile.canvas.draw_idle()
         self.WDGT_Profile.canvas.draw()
 
     # change between linear and quadratic bandfit

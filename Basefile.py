@@ -114,7 +114,8 @@ class SpectraBase(object):
         """
         dv = (np.array(endpnt) - np.array(strtpnt))/float(N)
         profile = [self.IDATA(strtpnt[0] + dv[0]*i, strtpnt[1]+dv[1]*i)[0] for i in range(N)]
-        return np.linspace(0,1,N),profile
+
+        return np.linspace(0,np.linalg.norm(np.array(endpnt) - np.array(strtpnt)),N), profile
 
     def adjust_Fermilevel(self, xList, yList):
         """
