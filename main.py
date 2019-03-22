@@ -191,6 +191,11 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.Profile_Dict['fitPlot'] = None
                 ydata = self.Spec1D.IDATA(xfit)
                 fitting = FitClass(xfit, ydata, self.DCFIT_DICT)
+                if self.EstimateProfileParams:
+                    params = fitting.estimate_start_parameters()
+                    self.DCFIT_DICT['start_parameters'] = params
+                    print("Estimated parameters: ", params)
+                    self.LE_Parameters.setText(', '.join("%.1E" % e for e in self.DCFIT_DICT['start_parameters']))
                 fitting.do_fit()
                 yfit = fitting.fitcurve(xfit)
                 self.Profile_Dict['fitPlot'], = self.WDGT_Profile.canvas.ax.plot(xfit, yfit, color='k')
@@ -213,7 +218,6 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.TE_ARPES_output.setText(output)
             except:
                 print("couldn't fit Profile")
-
             self.WDGT_Profile.canvas.draw_idle()
 
     # manage the fitting in ARPES window
@@ -339,8 +343,8 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
                     self.Profile_Dict['lineLeftval'] = None
                 self.Profile_Dict['lineLeft'] = self.WDGT_Profile.canvas.ax.axvline(event.xdata, color='#41701c')
                 self.Profile_Dict['lineLeftval'] = event.xdata
-                if self.EstimateProfileParams:
-                    self.EstimateFitParamsProfile()
+                # if self.EstimateProfileParams:
+                #     self.EstimateFitParamsProfile()
             # add right border for fit
             if event.button == 3:
                 if self.Profile_Dict['lineRight']:
@@ -348,8 +352,8 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
                     self.Profile_Dict['lineRightval'] = None
                 self.Profile_Dict['lineRight'] = self.WDGT_Profile.canvas.ax.axvline(event.xdata, color='#601c70')
                 self.Profile_Dict['lineRightval'] = event.xdata
-                if self.EstimateProfileParams:
-                    self.EstimateFitParamsProfile()
+                # if self.EstimateProfileParams:
+                #     self.EstimateFitParamsProfile()
             self.WDGT_Profile.canvas.draw()
                 
 
