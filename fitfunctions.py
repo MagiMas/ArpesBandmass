@@ -42,9 +42,9 @@ mexican_dict = {
     'function' : mexican_hat,
     'name' : 'mexican',
     'function_template' : 'a0 * [-(x-a2)**2 + a1 * (x-a2)**4] + a3',
-    'start_parameters' : [1., 1., 1., 1.],
+    'start_parameters' : [1., 50., 0., 0.],
     'parameter_names' : ['intensity', 'fraction_mexican', 'x0', 'const_background'],
-    'bounds' : ([0., 0., -np.inf, -np.inf], [np.inf, np.inf, np.inf, np.inf])
+    'bounds' : ([-np.inf, -np.inf, -np.inf, -np.inf], [np.inf, np.inf, np.inf, np.inf])
 }
 
 lorentzian_dict = {
