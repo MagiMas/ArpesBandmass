@@ -57,7 +57,5 @@ class FitClass:
         ydat = [self.FFDICT['function'](x, *self.POPT) for x in xdat]
         return np.array(ydat)
 
-
-
 if __name__ == "__main__":
     pass

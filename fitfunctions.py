@@ -14,6 +14,9 @@ def lorentzian(x, a0, a1, a2, a3, a4):
 
 def gaussian(x, a0, a1, a2, a3, a4):
     return a0*(a1*np.sqrt(2.*np.pi))**(-1)*np.exp(-0.5*((x - a2)/a1)**2) + a3 * (x - a2) + a4
+    
+def mexican_hat(x, a0, a1, a2, a3):
+    return a0*(-(x - a2)**2 + a1*(x-a2)**4) + a3
 
 
 ### --- COMBINE FITTING FUNCTIONS WITH DICTIONARIES FOR THEIR NAME, STARTING PARAMETERS, TEMPLATE, ETC. --- ###
@@ -33,6 +36,15 @@ quadratic_dict = {
     'start_parameters' : [1., 1., 1.],
     'parameter_names' : ['intensity', 'x0', 'const_background'],
     'bounds' : ([-np.inf, -np.inf, -np.inf], [np.inf, np.inf, np.inf])
+}
+
+mexican_dict = {
+    'function' : mexican_hat,
+    'name' : 'mexican',
+    'function_template' : 'a0 * [-(x-a2)**2 + a1 * (x-a2)**4] + a3',
+    'start_parameters' : [1., 1., 1., 1.],
+    'parameter_names' : ['intensity', 'fraction_mexican', 'x0', 'const_background'],
+    'bounds' : ([0., 0., -np.inf, -np.inf], [np.inf, np.inf, np.inf, np.inf])
 }
 
 lorentzian_dict = {
@@ -59,5 +71,6 @@ fitfunc_dict = {
     'linear' : linear_dict,
     'quad' : quadratic_dict,
     'lorentz' : lorentzian_dict,
-    'gauss' : gaussian_dict
+    'gauss' : gaussian_dict,
+    'mexican' : mexican_dict
 }

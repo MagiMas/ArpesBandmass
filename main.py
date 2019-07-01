@@ -56,6 +56,8 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.RB_Fit_Quadratic.setChecked(True)
         self.RB_Fit_Quadratic.toggled.connect(lambda:self.changeBandfit("quad"))
         self.RB_Fit_Linear.toggled.connect(lambda:self.changeBandfit("linear"))
+        self.RB_Fit_Mexican.toggled.connect(lambda:self.changeBandfit("mexican"))
+
 
         # Manage Editing for Profile
         self.EDITING_PROFILE = True
@@ -238,6 +240,8 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 fitting.do_fit()
             except:
                 print("Fitting not succesful")
+                p_ = self.BANDFIT_DICT['start_parameters']
+                self.ARPES_Dict['fitplot'], = self.WDGT_ARPES.canvas.ax.plot(xdat, [self.BANDFIT_DICT['function'](x, *p_) for x in xdat], color='#c65411')
             xstart, xstop = np.amin(xdat), np.amax(xdat)
             xDelta = xstop - xstart
             xfit = np.linspace(xstart-xDelta*0.05, xstop+xDelta*0.05, 200)
@@ -552,6 +556,7 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def changeBandfit(self, button):
         self.BANDFIT = button
         self.BANDFIT_DICT = ffs.fitfunc_dict[button]
+        self.LE_Update_Bandfit.setText(', '.join(str(e) for e in self.BANDFIT_DICT['start_parameters']))
         self.LBL_Fitfunc.setText('\t' + self.BANDFIT_DICT['function_template'])
 
     # update bandfit parameters

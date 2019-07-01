@@ -323,6 +323,16 @@ Line{
              </widget>
             </item>
             <item>
+             <widget class="QRadioButton" name="RB_Fit_Mexican">
+              <property name="text">
+               <string>Mexican</string>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup_2</string>
+              </attribute>
+             </widget>
+            </item>
+            <item>
              <widget class="QPushButton" name="PB_Fit_ARPES">
               <property name="text">
                <string>Fit</string>
@@ -736,8 +746,8 @@ Line{
  <resources/>
  <connections/>
  <buttongroups>
+  <buttongroup name="buttonGroup"/>
   <buttongroup name="buttonGroup_3"/>
   <buttongroup name="buttonGroup_2"/>
-  <buttongroup name="buttonGroup"/>
  </buttongroups>
 </ui>
