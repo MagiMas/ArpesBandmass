@@ -26,7 +26,8 @@ linear_dict = {
     'function_template': 'a0*(x-a1) + a2',
     'start_parameters' : [1., 1., 1.],
     'parameter_names' : ['intensity', 'x0', 'const_background'],
-    'bounds' : ([-np.inf, -np.inf, -np.inf], [np.inf, np.inf, np.inf])
+    'bounds' : ([-np.inf, -np.inf, -np.inf], [np.inf, np.inf, np.inf]),
+    'types' : ['AC']
 }
 
 quadratic_dict = {
@@ -35,7 +36,8 @@ quadratic_dict = {
     'function_template' : 'a0 * (x-a1)**2 + a2',
     'start_parameters' : [1., 1., 1.],
     'parameter_names' : ['intensity', 'x0', 'const_background'],
-    'bounds' : ([-np.inf, -np.inf, -np.inf], [np.inf, np.inf, np.inf])
+    'bounds' : ([-np.inf, -np.inf, -np.inf], [np.inf, np.inf, np.inf]),
+    'types' : ['AC']
 }
 
 mexican_dict = {
@@ -44,7 +46,8 @@ mexican_dict = {
     'function_template' : 'a0 * [-(x-a2)**2 + a1 * (x-a2)**4] + a3',
     'start_parameters' : [1., 50., 0., 0.],
     'parameter_names' : ['intensity', 'fraction_mexican', 'x0', 'const_background'],
-    'bounds' : ([-np.inf, -np.inf, -np.inf, -np.inf], [np.inf, np.inf, np.inf, np.inf])
+    'bounds' : ([-np.inf, -np.inf, -np.inf, -np.inf], [np.inf, np.inf, np.inf, np.inf]),
+    'types' : ['AC']
 }
 
 lorentzian_dict = {
@@ -53,7 +56,8 @@ lorentzian_dict = {
     'function_template' : 'a0*(1/(pi*a1))*(a1^2/((x-a2)^2+a1^2)) + a3*(x-a2) + a4',
     'start_parameters' : [1., 1., 1., 1., 1.],
     'parameter_names' : ['intensity', 'broadening', 'x0', 'slope_linear_background', 'const_background'],
-    'bounds' : ([-np.inf, -np.inf, -np.inf, -np.inf, -np.inf], [np.inf, np.inf, np.inf, np.inf, np.inf])
+    'bounds' : ([-np.inf, -np.inf, -np.inf, -np.inf, -np.inf], [np.inf, np.inf, np.inf, np.inf, np.inf]),
+    'types' : ['DC']
 }
 
 gaussian_dict = {
@@ -62,15 +66,16 @@ gaussian_dict = {
     'function_template' : 'a0*(1/(a1*sqrt(2*pi)))*exp(-0.5*((x-a2)/a1)^2) + a3*(x-a2)+a4',
     'start_parameters' : [1., 1., 1., 1., 1.],
     'parameter_names' : ['intensity', 'broadening', 'x0', 'slope_linear_background', 'const_background'],
-    'bounds' : ([-np.inf, -np.inf, -np.inf, -np.inf, -np.inf], [np.inf, np.inf, np.inf, np.inf, np.inf])
+    'bounds' : ([-np.inf, -np.inf, -np.inf, -np.inf, -np.inf], [np.inf, np.inf, np.inf, np.inf, np.inf]),
+    'types': ['DC']
 }
 
 
 ### --- PUT ALL FITTING FUNCTIONS INTO A LIST FOR LATER USE --- ###
 fitfunc_dict = {
     'linear' : linear_dict,
-    'quad' : quadratic_dict,
-    'lorentz' : lorentzian_dict,
-    'gauss' : gaussian_dict,
+    'quadratic' : quadratic_dict,
+    'lorentzian' : lorentzian_dict,
+    'gaussian' : gaussian_dict,
     'mexican' : mexican_dict
 }

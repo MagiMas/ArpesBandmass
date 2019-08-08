@@ -500,7 +500,7 @@ Line{
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,10,10">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0,0,0,0,0,0,0,0,0,0,0">
+         <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0,0,0,0,0,0,0,0,0,0">
           <item>
            <widget class="QLabel" name="LBL_ProfFit">
             <property name="text">
@@ -509,36 +509,7 @@ Line{
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="RB_Lorentzian">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Lorentzian</string>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">buttonGroup_3</string>
-            </attribute>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="RB_Gaussian">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Gaussian</string>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">buttonGroup_3</string>
-            </attribute>
-           </widget>
+           <widget class="QComboBox" name="CB_DCFitfunction"/>
           </item>
           <item>
            <widget class="Line" name="line_5">
@@ -746,8 +717,8 @@ Line{
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup"/>
-  <buttongroup name="buttonGroup_3"/>
   <buttongroup name="buttonGroup_2"/>
+  <buttongroup name="buttonGroup_3"/>
+  <buttongroup name="buttonGroup"/>
  </buttongroups>
 </ui>
