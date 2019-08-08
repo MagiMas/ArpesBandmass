@@ -50,14 +50,15 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.EDITING_ARPES = False
         self.PB_DC_Editing.released.connect(self.changeEditingArpes)
 
-        # Manage Radio Button for Linear or Quadratic Band Fit
+        # Manage Combobox for Band Fits
         self.BANDFIT_DICT = ffs.fitfunc_dict['quadratic']
         self.BANDFIT = 'quadratic' # 'quadratic', 'linear' or 'mexican'
-        self.RB_Fit_Quadratic.setChecked(True)
-        self.RB_Fit_Quadratic.toggled.connect(lambda:self.changeBandfit("quadratic"))
-        self.RB_Fit_Linear.toggled.connect(lambda:self.changeBandfit("linear"))
-        self.RB_Fit_Mexican.toggled.connect(lambda:self.changeBandfit("mexican"))
-
+        self.FillComboBox()
+        indexBand = self.CB_BandFitfunction.findText('quadratic', QtCore.Qt.MatchFixedString)
+        if indexBand >= 0:
+            print('found index AC')
+            self.CB_BandFitfunction.setCurrentIndex(indexBand)
+        self.CB_BandFitfunction.currentIndexChanged.connect(self.changeBandfit)
 
         # Manage Editing for Profile
         self.EDITING_PROFILE = True
@@ -71,18 +72,14 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
         # Manage Pushbutton to update Fit Parameters for Bandfit
         self.PB_Update_Bandfit.released.connect(self.updateBandFit_parameters)
 
-        # Manage Radio Button for Lorentzian or Gaussian EDC/MDC Fit
+        # Manage Combobox for  EDC/MDC Fit
         self.DCFIT_DICT = ffs.fitfunc_dict['lorentzian']
         self.DCFIT = 'lorentzian'
-        self.FillComboBox()
-        index = self.CB_DCFitfunction.findText('lorentzian', QtCore.Qt.MatchFixedString)
-        if index >= 0:
-            print('found index')
-            self.CB_DCFitfunction.setCurrentIndex(index)
+        indexDC = self.CB_DCFitfunction.findText('lorentzian', QtCore.Qt.MatchFixedString)
+        if indexDC >= 0:
+            print('found index DC')
+            self.CB_DCFitfunction.setCurrentIndex(indexDC)
         self.CB_DCFitfunction.currentIndexChanged.connect(self.changeDCFit)
-        #self.RB_Lorentzian.setChecked(True)
-        #self.RB_Lorentzian.toggled.connect(lambda:self.changeDCFit('lorentzian'))
-        #self.RB_Gaussian.toggled.connect(lambda:self.changeDCFit('gaussian'))
 
         # Manage LineEdit for Input of Starting Fit Parameters for EDC/MDC Fit
         self.LE_Parameters.setText(', '.join(str(e) for e in self.DCFIT_DICT['start_parameters']))
@@ -142,12 +139,17 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.EstimateProfileParams = self.ChB_Estimate_Params_Profile.isChecked()
         self.ChB_Estimate_Params_Profile.stateChanged.connect(self.EstimateFitParamsProfileBool)
 
+    # Fill the comboboxes with correct fitfunctions
     def FillComboBox(self):
         DC_funcs = []
+        AC_funcs = []
         for ff in ffs.fitfunc_dict.values():
             if 'DC' in ff['types']:
                 DC_funcs.append(ff['name'])
+            if 'AC' in ff['types']:
+                AC_funcs.append(ff['name'])
         self.CB_DCFitfunction.addItems(DC_funcs)
+        self.CB_BandFitfunction.addItems(AC_funcs)
 
     # Manage the Estimation of the Profile Parameters
     def EstimateFitParamsProfile(self):
@@ -567,8 +569,9 @@ class ARPESMassApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     # change between linear and quadratic bandfit
     def changeBandfit(self, button):
-        self.BANDFIT = button
-        self.BANDFIT_DICT = ffs.fitfunc_dict[button]
+        print(self.CB_BandFitfunction.currentText())
+        self.BANDFIT = self.CB_BandFitfunction.currentText()
+        self.BANDFIT_DICT = ffs.fitfunc_dict[self.CB_BandFitfunction.currentText()]
         self.LE_Update_Bandfit.setText(', '.join(str(e) for e in self.BANDFIT_DICT['start_parameters']))
         self.LBL_Fitfunc.setText('\t' + self.BANDFIT_DICT['function_template'])
 
